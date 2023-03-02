@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          platforms: $PLATFORMS
+          platforms: "$PLATFORMS"
           tags: ghcr.io/fred-drake/$IMAGE_NAME:latest
         if: steps.extract_branch.outputs.branch == '$PRIMARY_BRANCH'
       
@@ -41,6 +41,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          platforms: $PLATFORMS
+          platforms: "$PLATFORMS"
           tags: ghcr.io/fred-drake/$IMAGE_NAME:${{ steps.extract_branch.outputs.branch }}
         if: steps.extract_branch.outputs.branch != '$PRIMARY_BRANCH'
