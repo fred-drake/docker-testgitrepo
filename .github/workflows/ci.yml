@@ -1,0 +1,46 @@
+name: ci
+
+on: [push, pull_request]
+
+env:
+  IMAGE_NAME: testgitrepo
+  PLATFORMS: linux/amd64,linux/arm64
+  PRIMARY_BRANCH: master
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push master
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: $PLATFORMS
+          tags: ghcr.io/fred-drake/$IMAGE_NAME:latest
+        if: steps.extract_branch.outputs.branch == '$PRIMARY_BRANCH'
+      
+      - name: Build and push version
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: $PLATFORMS
+          tags: ghcr.io/fred-drake/$IMAGE_NAME:${{ steps.extract_branch.outputs.branch }}
+        if: steps.extract_branch.outputs.branch != '$PRIMARY_BRANCH'
