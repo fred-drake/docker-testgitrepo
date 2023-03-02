@@ -26,7 +26,7 @@ git clone http://testuser@localhost:8080/test.git
 
 ## SSH Access
 
-The container comes with a pre-configured private and public key which allows password-less access via SSH.  You can get the private key directly from the code repository, or copy it from the image, stored in the root directory under the name `ssh_user_key`.  If you use your own key, then add a file-level mount at `/home/testuser/.ssh/authorized_keys` when you run your container.
+The container comes with a pre-configured private and public key which allows password-less access via SSH.  You can get the private key [directly from the code repository](https://raw.githubusercontent.com/fred-drake/docker-testgitrepo/master/ssh_user_key), or copy it from the image, stored in the root directory under the name `ssh_user_key`.  If you use your own key, then add a file-level mount at `/home/testuser/.ssh/authorized_keys` when you run your container.
 
 ```bash
 GIT_SSH_COMMAND='ssh -i /path/to/your/ssh_user_key -p 2222' git clone testuser@localhost:/test.git
