@@ -2,10 +2,6 @@ name: ci
 
 on: [push, pull_request]
 
-env:
-  IMAGE_NAME: testgitrepo
-  PRIMARY_BRANCH: master
-
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -33,13 +29,13 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/fred-drake/$IMAGE_NAME:latest
-        if: steps.extract_branch.outputs.branch == '$PRIMARY_BRANCH'
+          tags: ghcr.io/fred-drake/testgitrepo:latest
+        if: steps.extract_branch.outputs.branch == 'master'
       
       - name: Build and push version
         uses: docker/build-push-action@v2
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/fred-drake/$IMAGE_NAME:${{ steps.extract_branch.outputs.branch }}
-        if: steps.extract_branch.outputs.branch != '$PRIMARY_BRANCH'
+          tags: ghcr.io/fred-drake/testgitrepo:${{ steps.extract_branch.outputs.branch }}
+        if: steps.extract_branch.outputs.branch != 'master'
